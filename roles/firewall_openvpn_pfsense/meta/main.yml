@@ -1,0 +1,10 @@
+galaxy_info:
+  author: hack3d
+  description: Configure openvpn on pfsense firewall
+  company: IT4smart GmbH
+  license: "license (GPL v3)"
+  min_ansible_version: "2.13"
+
+dependencies:
+  - name: pfsensible.core
+    version: 0.6.1

@@ -1,0 +1,16 @@
+# code: language=ansible
+- name: Configure interfaces
+  ansible.builtin.include_tasks: interfaces.yml
+  loop: "{{ interfaces }}"
+
+- name: Configure VLANs
+  ansible.builtin.include_tasks: vlan.yml
+  loop: "{{ vlan_ips }}"
+
+- name: Configure IGMP
+  ansible.builtin.include_tasks: igmp.yml
+  loop: "{{ vlans }}"
+
+- name: Save config when modified
+  cisco.ios.ios_config:
+    save_when: modified

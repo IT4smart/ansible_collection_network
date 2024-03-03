@@ -1,0 +1,10 @@
+# code: language=ansible
+- name: "network | Add interface for {{ item.description }}"
+  pfsensible.core.pfsense_interface:
+    descr: "{{ item.description }}"
+    interface: "{{ item.interface }}"
+    enable: "{{ item.enable | default(false) }}"
+    ipv4_address: "{{ item.ipv4_address }}"
+    ipv4_prefixlen: "{{ item.ipv4_prefix_length }}"
+    ipv4_type: "{{ item.ipv4_type }}"
+  with_items: "{{ pfsense_interfaces }}"

@@ -1,0 +1,13 @@
+# code: language=ansible
+- name: "firewall | {{ item.name }}"
+  pfsensible.core.pfsense_rule:
+    name: "{{ item.name }}"
+    action: "{{ item.action }}"
+    interface: "{{ item.interface }}"
+    ipprotocol: "{{ item.ipprotocol | default('inet') }}"
+    protocol: "{{ item.protocol }}"
+    source: "{{ item.source }}"
+    destination: "{{ item.destination }}"
+    destination_port: "{{ item.destination_port | default(omit) }}"
+    before: "{{ item.before | default(omit) }}"
+    after: "{{ item.after | default(omit) }}"

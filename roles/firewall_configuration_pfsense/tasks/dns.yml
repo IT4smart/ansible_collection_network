@@ -1,0 +1,10 @@
+# code: language=ansible
+- name: dns | Configure DNS resolver
+  pfsensible.core.pfsense_dns_resolver:
+    state: "{{ pfsense_dns_resolver_state }}"
+    enablessl: "{{ pfsense_dns_resolver_enablessl }}"
+    active_interface: "{{ pfsense_dns_resolver_active_interfaces }}"
+    outgoing_interface: "{{ pfsense_dns_resolver_outgoing_interfaces }}"
+    dnssec: "{{ pfsense_dns_resolver_dnssec }}"
+    regdhcp: "{{ pfsense_dns_resolver_regdhcp }}"
+    regdhcpstatic: "{{ pfsense_dns_resolver_regdhcpstatic }}"

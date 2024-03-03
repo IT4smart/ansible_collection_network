@@ -1,0 +1,11 @@
+# code: language=ansible
+- name: Configure firewall rules
+  ansible.builtin.include_tasks: firewall.yml
+  with_items: "{{ pfsense_firewall_rules }}"
+
+- name: Manage user on  PfSense
+  ansible.builtin.include_tasks: user.yml
+  with_items: "{{ openvpn_users }}"
+
+- name: Manage dns resolver
+  ansible.builtin.include_tasks: dns.yml

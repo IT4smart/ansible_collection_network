@@ -1,0 +1,8 @@
+version: "3"
+services:
+  vscode:
+    build: .
+    volumes:
+      - ../:/workspace
+      - ~/.ssh:/mnt/ssh
+    entrypoint: [ "bash", "-c", "while sleep 1000; do :; done" ]

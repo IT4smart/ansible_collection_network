@@ -1,0 +1,32 @@
+# code: language=ansible
+- name: vlan | Set vlan ip helper address
+  ansible.builtin.set_fact:
+    vlan_ip_helper: "ip helper-address {{ item.ip_helper }}"
+  when: item.ip_helper is defined
+
+- name: vlan | Set IP for switch on Vlan '{{ item.name }}'
+  cisco.ios.ios_command:
+    commands:
+      - enable
+      - configure terminal
+      - "interface Vlan {{ item.vlan_id }}"
+      - "ip address {{ item.ip_address }} {{ item.subnet }}"
+
+- name: vlan | Configure DHCP snooping
+  cisco.ios.ios_config:
+    lines:
+      - service dhcp
+      - ip dhcp snooping
+      - "ip dhcp snooping vlan {{ item.vlan_id }}"
+      - ip dhcp snooping information option
+      - ip dhcp snooping information option format remote-id string acsiistring2
+      - ip dhcp snooping information option allow-untrusted
+  when: item.ip_helper is defined
+
+- name: vlan | Set ip helper-address
+  cisco.ios.ios_config:
+    lines:
+      - "{{ vlan_ip_helper | default(omit) }}"
+    parents:
+      - "interface Vlan {{ item.vlan_id }}"
+  when: item.ip_helper is defined

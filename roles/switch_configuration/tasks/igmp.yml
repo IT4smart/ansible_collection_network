@@ -1,0 +1,6 @@
+# code: language=ansible
+- name: igmp | Enable igmp on vlan {{ item.vlan_id }}
+  cisco.ios.ios_config:
+    lines:
+      - "ip igmp snooping vlan {{ item.vlan_id }}"
+  when: item.igmp_enabled

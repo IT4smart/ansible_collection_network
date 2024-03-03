@@ -1,0 +1,17 @@
+namespace: "it4smart"
+name: "network"
+version: "0.1.0"
+readme: README.md
+authors:
+  - hack3d (github.com/hack3d)
+tags:
+  - "network"
+  - "linux"
+  - "windows"
+description: A collection of roles to configure network devices (firewall, switch)
+license_file: LICENSE
+repository: https://github.com/IT4smart/ansible_collection_network
+homepage: https://github.com/IT4smart/ansible_collection_network
+issues: https://github.com/IT4smart/ansible_collection_network/issues
+build_ignore:
+  - ".gitignore"

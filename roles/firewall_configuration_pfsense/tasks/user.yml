@@ -1,0 +1,15 @@
+# code: language=ansible
+- name: "user | Manage user {{ item.username }}"
+  pfsensible.core.pfsense_user:
+    name: "{{ item.username }}"
+    password: "{{ item.password | password_hash('bcrypt') }}"
+
+- name: user | Create user certificate
+  pfsensible.core.pfsense_cert:
+    method: internal
+    name: "{{ item.username }}"
+    ca: "OpenVPN CA"
+    certtype: user
+    keylen: 4096
+    dn_country: DE
+    lifetime: 398

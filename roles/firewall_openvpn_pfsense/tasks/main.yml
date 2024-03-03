@@ -1,0 +1,35 @@
+# code: language=ansible
+- name: OpenVPN CA
+  pfsensible.core.pfsense_ca:
+    name: "{{ openvpn_server_args.ca }}"
+    certificate: "{{ vault_openvpn_ca }}"
+    randomserial: true
+    state: present
+
+- name: Generate new internal certificate for OpenVPN
+  pfsensible.core.pfsense_cert:
+    method: internal
+    name: "{{ openvpn_server_args.cert }}"
+    ca: "{{ openvpn_server_args.ca }}"
+    keytype: RSA
+    keylen: 4096
+    lifetime: 370
+    dn_country: DE
+    certtype: server
+    state: present
+
+- name: "Define {{ openvpn_server_args.name }}"
+  pfsensible.core.pfsense_openvpn_server: "{{ openvpn_server_args }}"
+  register: openvpn_server
+
+- name: Fail on different OpenVPN server vpnid
+  ansible.builtin.fail:
+    msg: OpenVPN server vpnid {{ openvpn_server.vpnid }} does not match expected value {{ openvpn_server_vpnid }}
+  when: openvpn_server.vpnid != openvpn_server_vpnid
+
+- name: Wait for config written
+  ansible.builtin.wait_for:
+    path: "/var/etc/openvpn/server{{ openvpn_server.vpnid }}/config.ovpn"
+
+- name: "Define {{ interface_args.name }}"
+  pfsensible.core.pfsense_interface: "{{ interface_args }}"

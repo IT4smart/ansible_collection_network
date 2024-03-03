@@ -1,0 +1,53 @@
+# code: language=ansible
+- name: interfaces | Configure port {{ item.name }} access mode
+  cisco.ios.ios_l2_interfaces:
+    config:
+    - name: "{{ item.name }}"
+      mode: "{{ item.mode }}"
+      access:
+        vlan: "{{ item.vlan }}"
+    state: replaced
+  when: item.mode == 'access'
+
+- name: interfaces | Configure port {{ item.name }} trunk mode
+  cisco.ios.ios_l2_interfaces:
+    config:
+      - name: "{{ item.name }}"
+        mode: "{{ item.mode }}"
+        trunk:
+          allowed_vlans: "{{ item.allowed_vlans }}"
+          native_vlan: "{{ item.native_vlan }}"
+        voice:
+          vlan: "{{ item.voice_vlan | default(omit) }}"
+    state: replaced
+  when: item.mode == 'trunk'
+
+- name: interfaces | Configure port {{ item.name }} spanning-tree portfast
+  cisco.ios.ios_config:
+    lines:
+      - spanning-tree portfast edge
+    parents: 'interface {{ item.name }}'
+  when: item.port_fast == true
+
+- name: interfaces | Confiure dhcp snooping trust
+  cisco.ios.ios_config:
+    lines:
+      - ip dhcp snooping trust
+    parents: 'interface {{ item.name }}'
+  when: item.dhcp_snooping
+
+- name: interfaces | Confiure dhcp snooping untrust
+  cisco.ios.ios_config:
+    lines:
+      - no ip dhcp snooping trust
+    parents: 'interface {{ item.name }}'
+  when: not item.dhcp_snooping
+
+- name: interfaces | Configure etherchannel
+  cisco.ios.ios_config:
+    lines:
+      - "channel-group {{ item.channel_group }} mode active"
+    parents: 'interface {{ item.name }}'
+  when:
+    - item.channel_group is defined
+    - item.channel_group

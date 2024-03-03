@@ -1,0 +1,46 @@
+# code: language=ansible
+- name: Install packages
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - pfSense-pkg-sudo
+    - pfSense-pkg-Open-VM-Tools
+    - pfSense-pkg-openvpn-client-export
+    - pfSense-pkg-RRD_Summary
+
+- name: Timezone and language
+  pfsensible.core.pfsense_setup:
+    timezone: Europe/Berlin
+    language: de_DE
+
+- name: Setup hostname and domain
+  pfsensible.core.pfsense_setup:
+    hostname: "{{ inventory_hostname_short }}"
+    domain: "{{ domain_name }}"
+
+- name: Setup dns
+  pfsensible.core.pfsense_setup:
+    dnsallowoverride: false
+    dns_addresses: 1.1.1.1 1.0.0.1
+
+- name: Setup timeservers
+  pfsensible.core.pfsense_setup:
+    timeservers: 0.europe.pool.ntp.org 1.europe.pool.ntp.org 2.europe.pool.ntp.org 3.europe.pool.ntp.org
+
+- name: Create IT4smart vpn user
+  pfsensible.core.pfsense_user:
+    name: it4smart
+    password: "{{ vault_it4smart_fwl_password | password_hash('bcrypt') }}"
+
+- name: Create user certificate
+  pfsensible.core.pfsense_cert:
+    method: internal
+    name: "it4smart"
+    ca: "OpenVPN CA"
+    certtype: user
+    keylen: 4096
+    dn_country: DE
+
+- name: Network
+  ansible.builtin.include_tasks: network.yml

@@ -1,0 +1,13 @@
+openvpn_users: []
+pfsense_firewall_rules: []
+
+# DNS resolver
+pfsense_dns_resolver_state: present
+pfsense_dns_resolver_enablessl: false
+pfsense_dns_resolver_active_interfaces:
+  - all
+pfsense_dns_resolver_outgoing_interfaces:
+  - WAN
+pfsense_dns_resolver_dnssec: true
+pfsense_dns_resolver_regdhcp: true
+pfsense_dns_resolver_regdhcpstatic: true
