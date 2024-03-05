@@ -5,9 +5,16 @@
     state: present
   with_items:
     - pfSense-pkg-sudo
-    - pfSense-pkg-Open-VM-Tools
     - pfSense-pkg-openvpn-client-export
     - pfSense-pkg-RRD_Summary
+
+- name: Install VMWare package
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - pfSense-pkg-Open-VM-Tools
+  when: pfsense_virtualized
 
 - name: Timezone and language
   pfsensible.core.pfsense_setup:

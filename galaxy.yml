@@ -15,6 +15,7 @@ homepage: https://github.com/IT4smart/ansible_collection_network
 issues: https://github.com/IT4smart/ansible_collection_network/issues
 build_ignore:
   - ".gitignore"
+  - ".devcontainer"
 dependencies:
-  "cisco.ios": "3.3.1"
-  "pfsensible.core": "0.6.1"
+  cisco.ios: ">=3.3.1"
+  pfsensible.core: ">=0.6.1"
