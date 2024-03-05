@@ -8,3 +8,4 @@
     dnssec: "{{ pfsense_dns_resolver_dnssec }}"
     regdhcp: "{{ pfsense_dns_resolver_regdhcp }}"
     regdhcpstatic: "{{ pfsense_dns_resolver_regdhcpstatic }}"
+    forward_tls_upstream: "{{ pfsense_dns_resolver_forward_tls_upstream }}"

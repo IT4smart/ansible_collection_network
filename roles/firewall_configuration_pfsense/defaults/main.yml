@@ -11,3 +11,4 @@ pfsense_dns_resolver_outgoing_interfaces:
 pfsense_dns_resolver_dnssec: true
 pfsense_dns_resolver_regdhcp: true
 pfsense_dns_resolver_regdhcpstatic: true
+pfsense_dns_resolver_forward_tls_upstream: false
