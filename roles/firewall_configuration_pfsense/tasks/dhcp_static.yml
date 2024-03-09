@@ -4,4 +4,5 @@
     macaddr: "{{ item.mac_address }}"
     ipaddr: "{{ item.ip_address }}"
     name: "{{ item.name }}"
+    arp_table_static_entry: "{{ item.arp_table_static_entry }}"
   with_items: "{{ pfsense_dhcp_static_entries }}"
