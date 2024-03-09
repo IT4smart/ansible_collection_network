@@ -7,6 +7,7 @@
     - pfSense-pkg-sudo
     - pfSense-pkg-openvpn-client-export
     - pfSense-pkg-RRD_Summary
+  when: pfsense_skip
 
 - name: Install VMWare package
   ansible.builtin.package:

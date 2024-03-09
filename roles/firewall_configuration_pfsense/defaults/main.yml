@@ -1,5 +1,6 @@
 openvpn_users: []
 pfsense_firewall_rules: []
+pfsense_skip: false
 
 # DNS resolver
 pfsense_dns_resolver_state: present
