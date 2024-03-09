@@ -10,7 +10,7 @@
     target: "{{ item.target }}"
     natreflection: "{{ item.nat_reflection | default('system-default') }}"
     associated_rule: "{{ item.associated_rule | default('associated') }}"
-    state: "{{ item.state | default(present) }}"
+    state: "{{ item.state | default('present') }}"
     before: "{{ item.before | default(omit) }}"
     after: "{{ item.after | default(omit) }}"
   with_items: "{{ pfsense_nat_port_forwards }}"
