@@ -12,3 +12,7 @@ pfsense_dns_resolver_dnssec: true
 pfsense_dns_resolver_regdhcp: true
 pfsense_dns_resolver_regdhcpstatic: true
 pfsense_dns_resolver_forward_tls_upstream: false
+
+# DHCP static
+pfsense_dhcp_static_enabled: false
+pfsense_dhcp_static_entries: []

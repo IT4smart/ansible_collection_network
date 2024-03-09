@@ -1,0 +1,7 @@
+- name: dhcp_static | Manage dhcp static entry
+  pfsensible.core.pfsense_dhcp_static:
+    netif: "{{ item.interface }}"
+    macaddr: "{{ item.mac_address }}"
+    ipaddr: "{{ item.ip_address }}"
+    name: "{{ item.name }}"
+  with_items: "{{ pfsense_dhcp_static_entries }}"

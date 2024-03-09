@@ -9,3 +9,7 @@
 
 - name: Manage dns resolver
   ansible.builtin.include_tasks: dns.yml
+
+- name: Manage dhcp static entries
+  ansible.builtin.include_tasks: dhcp_static.yml
+  when: pfsense_dhcp_static_enabled
