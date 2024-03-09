@@ -1,0 +1,16 @@
+- name: nat | Manage DNAT
+  pfsensible.core.pfsense_nat_port_forward:
+    descr: "{{ item.description }}"
+    disabled: "{{ item.disabled | default(false) }}"
+    interface: "{{ item.interface }}"
+    ipprotocol: "{{ item.ip_protocol }}"
+    protocol: "{{ item.protocol }}"
+    source: "{{ item.source }}"
+    destination: "{{ item.destination }}"
+    target: "{{ item.target }}"
+    natreflection: "{{ item.nat_reflection | default(system-default) }}"
+    associated_rule: "{{ item.associated_rule | default(associated) }}"
+    state: "{{ item.state | default(present) }}"
+    before: "{{ item.before | default(omit) }}"
+    after: "{{ item.after | default(omit) }}"
+  with_items: "{{ pfsense_nat_port_forwards }}"

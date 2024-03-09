@@ -16,3 +16,6 @@ pfsense_dns_resolver_forward_tls_upstream: false
 # DHCP static
 pfsense_dhcp_static_enabled: false
 pfsense_dhcp_static_entries: []
+
+# DNAT
+pfsense_nat_port_forwards: []

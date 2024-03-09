@@ -13,3 +13,6 @@
 - name: Manage dhcp static entries
   ansible.builtin.include_tasks: dhcp_static.yml
   when: pfsense_dhcp_static_enabled
+
+- name: Manage dnat
+  ansible.builtin.include_tasks: nat.yml
