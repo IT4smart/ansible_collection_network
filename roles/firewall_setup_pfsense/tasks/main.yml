@@ -24,6 +24,17 @@
       ansible.builtin.package:
         name: qemu-guest-agent
         state: present
+    
+    - name: Configure QEMU guest agent
+      ansible.builtin.template:
+        src: rc_conf_local.j2
+        dest: /etc/rc.conf.local
+
+    - name: Enable QEMU guest agent
+      ansible.builtin.service:
+        name: qemu-guest-agent
+        enabled: true
+        state: started
   when:
     - pfsense_virtualized
     - ansible_facts['chassis_vendor'] == "QEMU"
