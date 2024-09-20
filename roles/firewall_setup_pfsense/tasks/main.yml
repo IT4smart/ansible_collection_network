@@ -14,7 +14,19 @@
     state: present
   with_items:
     - pfSense-pkg-Open-VM-Tools
-  when: pfsense_virtualized
+  when: 
+    - pfsense_virtualized
+    - ansible_facts['chassis_vendor'] != "QEMU"
+
+- name: Configure QEMU guest agent
+  block:
+    - name: Install QEMU guest agent package
+      ansible.builtin.package:
+        name: qemu-guest-agent
+        state: present
+  when:
+    - pfsense_virtualized
+    - ansible_facts['chassis_vendor'] == "QEMU"
 
 - name: Timezone and language
   pfsensible.core.pfsense_setup:
