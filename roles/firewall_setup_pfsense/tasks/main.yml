@@ -49,7 +49,7 @@
     hostname: "{{ inventory_hostname_short }}"
     domain: "{{ domain_name }}"
 
-- name: Setup dns
+- name: Setup dns upstream
   pfsensible.core.pfsense_setup:
     dnsallowoverride: false
     dns_addresses: 1.1.1.1 1.0.0.1
