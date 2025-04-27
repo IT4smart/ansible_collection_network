@@ -1,0 +1,18 @@
+- name: dns | Add static dns entry
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    line: "{{ nat_management_nat_ip }} {{ inventory_hostname }}"
+    search_string: "{{ nat_management_nat_ip }}"
+  become: true
+  register: _result_dns
+  delegate_to: "{{ item }}"
+  loop: "{{ groups['core_dns'] }}"
+
+- name: dns | Restart dnsmasq
+  ansible.builtin.systemd:
+    name: dnsmasq
+    state: restarted
+  when: _result_dns.changed
+  become: true
+  delegate_to: "{{ item }}"
+  loop: "{{ groups['core_dns'] }}"

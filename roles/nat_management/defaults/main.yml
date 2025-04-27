@@ -1,0 +1,2 @@
+nat_management_nat_ip: "{{ management_nat_ip }}"
+nat_management_host_ip: "{{ ansible_facts.default_ipv4.address }}"

@@ -1,0 +1,7 @@
+- name: nat_management | Configure NAT entries
+  ansible.builtin.include_tasks:
+    file: routers.yml
+
+- name: nat_management | Configure DNS
+  ansible.builtin.include_tasks:
+    file: dns.yml

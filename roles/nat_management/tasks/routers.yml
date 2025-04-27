@@ -1,0 +1,27 @@
+- name: routers | Set NAT rule id
+  ansible.builtin.set_fact:
+    nat_rule_id: "{{ ((nat_management_nat_ip | ansible.utils.ipaddr('int')) / 200000) | round | int }}"
+
+- name: routers | Debug
+  ansible.builtin.debug:
+    msg: "NAT rule id: {{ nat_rule_id }}"
+
+- name: routers | NAT
+  vyos.vyos.vyos_command:
+    commands:
+      - config
+      - set nat source rule {{ nat_rule_id | int }} description 'Masquerade traffic leaving veth40'
+      - set nat source rule {{ nat_rule_id | int }} outbound-interface name veth{{ customer_no | int }}
+      - set nat source rule {{ nat_rule_id | int }} translation address 'masquerade'
+      - set nat source rule {{ nat_rule_id | int }} protocol all
+      - set nat destination rule {{ nat_rule_id | int }} description 'Translate {{ nat_management_nat_ip }} to {{ nat_management_host_ip }}'
+      - set nat destination rule {{ nat_rule_id | int }} destination address {{ nat_management_nat_ip }}
+      - set nat destination rule {{ nat_rule_id | int }} inbound-interface name veth{{ customer_no | int + 10000 }}
+      - set nat destination rule {{ nat_rule_id | int }} translation address {{ nat_management_host_ip }}
+      - set nat source rule {{ customer_no | int }} description 'Masquerade traffic from VRF{{ customer_no }} leaving vtun{{ customer_no | int }}'
+      - set nat source rule {{ customer_no | int }} outbound-interface name 'vtun{{ customer_no | int }}'
+      - set nat source rule {{ customer_no | int }} translation address 'masquerade'
+      - commit
+      - save
+  delegate_to: "{{ item }}"
+  loop: "{{ groups['core_routers'] }}"

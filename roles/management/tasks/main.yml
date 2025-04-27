@@ -1,0 +1,128 @@
+- name: Check parameters
+  ansible.builtin.assert:
+    that:
+      - domain_name is defined
+      - nat_range is defined
+      - customer_no is defined
+
+- name: Check NAT range is valid
+  ansible.builtin.assert:
+    that:
+      - nat_range | ansible.utils.ipv4 != False
+      - nat_range | ansible.utils.ipsubnet(23,0)
+    fail_msg: "nat_range has an invalid value (Maybe it's not a valid IPv4 network or /23 subnet)"
+
+- name: Debug
+  ansible.builtin.debug:
+    msg: "{{ customer_no }} / {{ customer_no | int }}"
+
+- name: management | Calculate vasi ip address
+  ansible.builtin.set_fact:
+    _vasileftip: "{{ vasi_network | ansible.utils.ipmath((customer_no | int - 1) * 2) }}"
+    _vasirightip: "{{ vasi_network | ansible.utils.ipmath((customer_no | int - 1) * 2 + 1) }}"
+
+- name: management | Debug
+  ansible.builtin.debug:
+    msg: "VASI left ip: {{ _vasileftip }} / VASI right ip: {{ _vasirightip }}"
+
+- name: management | Configure dummy interface
+  vyos.vyos.vyos_command:
+    commands:
+      - config
+      - set interfaces virtual-ethernet veth{{ customer_no | int }} address {{ _vasileftip }}/31
+      - set interfaces virtual-ethernet veth{{ customer_no | int + 10000 }} address {{ _vasirightip }}/31
+      - set interfaces virtual-ethernet veth{{ customer_no | int }} peer-name veth{{ customer_no | int + 10000 }}
+      - set interfaces virtual-ethernet veth{{ customer_no | int + 10000 }} peer-name veth{{ customer_no | int }}
+      - commit
+      - save
+
+- name: management | Configure vrf
+  vyos.vyos.vyos_command:
+    commands:
+      - config
+      - set vrf name VRF{{ customer_no }} table '{{ customer_no | int + 10000 }}'
+      - commit
+      - save
+
+- name: management | Configure vasi right
+  vyos.vyos.vyos_command:
+    commands:
+      - config
+      - set interfaces virtual-ethernet veth{{ customer_no | int + 10000 }} vrf VRF{{ customer_no }}
+      - commit
+      - save
+
+- name: management | Create routes
+  vyos.vyos.vyos_command:
+    commands:
+      - config
+      - set protocols static route {{ nat_range }} next-hop {{ _vasirightip }} interface vtun{{ customer_no | int }}
+      - set vrf name VRF{{ customer_no }} protocols static route {{ nat_range }} next-hop {{ _vasirightip }} interface veth{{ customer_no | int + 10000 }}
+      - command
+      - save
+
+- name: management | Write OpenVPN CA to file
+  ansible.builtin.copy:
+    content: "{{ hostvars[groups['firewall'] | first]['vault_openvpn_ca'] }}"
+    dest: /tmp/openvpn-ca.crt
+    mode: "0600"
+  delegate_to: localhost
+
+- name: management | Write OpenVPN certificate to file
+  ansible.builtin.copy:
+    content: "{{ item.content }}"
+    dest: "{{ item.dest }}"
+    mode: "0600"
+  delegate_to: localhost
+  loop:
+    - { content: "{{ openvpn_certificate }}", dest: /tmp/openvpn-cert.crt }
+
+- name: management | Copy OpenVPN CA
+  ansible.netcommon.net_put:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  loop:
+    - { src: /tmp/openvpn-ca.crt, dest: /home/vyos/openvpn-ca.crt }
+    - { src: /tmp/openvpn-cert.crt, dest: /home/vyos/openvpn-cert.crt }
+
+- name: management | Generate CA import command
+  vyos.vyos.vyos_command:
+    commands:
+      - "import pki ca {{ management_certificate_authority_name }} file /home/vyos/openvpn-ca.crt"
+  register: _result_ovpn_ca
+
+- name: management | Generate certificate import command
+  vyos.vyos.vyos_command:
+    commands:
+      - "import pki certificate {{ management_certificate_name }} file /home/vyos/openvpn-cert.crt"
+  register: _result_ovpm_cert
+
+- name: management | Import OpenVPN certificates
+  vyos.vyos.vyos_command:
+    commands:
+      - config
+      - "{{ (_result_ovpn_ca.stdout_lines | first)[1] }}"
+      - "{{ (_result_ovpm_cert.stdout_lines | first)[1] }}"
+      - set pki certificate {{ management_certificate_name }} private key '{{ openvpn_privatekey | trim }}'
+      - commit
+      - save
+
+- name: management | Configure OpenVPN
+  vyos.vyos.vyos_command:
+    commands:
+      - config
+      - set interfaces openvpn vtun{{ customer_no | int }} encryption data-ciphers 'aes256'
+      - set interfaces openvpn vtun{{ customer_no | int }} hash 'sha256'
+      - set interfaces openvpn vtun{{ customer_no | int }} mode 'client'
+      - set interfaces openvpn vtun{{ customer_no | int }} persistent-tunnel
+      - set interfaces openvpn vtun{{ customer_no | int }} protocol 'udp'
+      - set interfaces openvpn vtun{{ customer_no | int }} remote-host 'hoher-steg.mh-abbruch.net'
+      - set interfaces openvpn vtun{{ customer_no | int }} remote-port '1194'
+      - set interfaces openvpn vtun{{ customer_no | int }} tls ca-cert {{ management_certificate_authority_name }}
+      - set interfaces openvpn vtun{{ customer_no | int }} tls certificate {{ management_certificate_name }}
+      - set interfaces openvpn vtun{{ customer_no | int }} openvpn-option 'route-nopull'
+      - set interfaces openvpn vtun{{ customer_no | int }} authentication username {{ openvpn_username }}
+      - set interfaces openvpn vtun{{ customer_no | int }} authentication password {{ openvpn_password }}
+      - set interfaces openvpn vtun{{ customer_no | int }} vrf VRF{{ customer_no }}
+      - commit
+      - save

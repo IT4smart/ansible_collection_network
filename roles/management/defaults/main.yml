@@ -1,0 +1,2 @@
+management_certificate_name: "cert-{{ customer_no }}"
+management_certificate_authority_name: "ca-{{ customer_no }}"
