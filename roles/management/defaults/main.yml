@@ -1,2 +1,8 @@
 management_certificate_name: "cert-{{ customer_no }}"
 management_certificate_authority_name: "ca-{{ customer_no }}"
+management_openvpn_ca: "{{ hostvars[groups['firewall'] | first]['vault_openvpn_ca'] }}"
+management_openvpn_data_cipher: aes256
+management_openvpn_hash: sha256
+management_openvpn_protocol: udp
+management_openvpn_remote_host: "{{ customer_no }}-vpn.sherlock.it4smart.com"
+management_openvpn_remote_port: 1194

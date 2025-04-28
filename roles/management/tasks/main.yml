@@ -63,7 +63,7 @@
 
 - name: management | Write OpenVPN CA to file
   ansible.builtin.copy:
-    content: "{{ hostvars[groups['firewall'] | first]['vault_openvpn_ca'] }}"
+    content: "{{ management_openvpn_ca }}"
     dest: /tmp/openvpn-ca.crt
     mode: "0600"
   delegate_to: localhost
@@ -111,13 +111,13 @@
   vyos.vyos.vyos_command:
     commands:
       - config
-      - set interfaces openvpn vtun{{ customer_no | int }} encryption data-ciphers 'aes256'
-      - set interfaces openvpn vtun{{ customer_no | int }} hash 'sha256'
+      - set interfaces openvpn vtun{{ customer_no | int }} encryption data-ciphers '{{ management_openvpn_data_cipher }}'
+      - set interfaces openvpn vtun{{ customer_no | int }} hash '{{ management_openvpn_hash }}'
       - set interfaces openvpn vtun{{ customer_no | int }} mode 'client'
       - set interfaces openvpn vtun{{ customer_no | int }} persistent-tunnel
-      - set interfaces openvpn vtun{{ customer_no | int }} protocol 'udp'
-      - set interfaces openvpn vtun{{ customer_no | int }} remote-host 'hoher-steg.mh-abbruch.net'
-      - set interfaces openvpn vtun{{ customer_no | int }} remote-port '1194'
+      - set interfaces openvpn vtun{{ customer_no | int }} protocol '{{ management_openvpn_protocol }}'
+      - set interfaces openvpn vtun{{ customer_no | int }} remote-host '{{ management_openvpn_remote_host }}'
+      - set interfaces openvpn vtun{{ customer_no | int }} remote-port '{{ management_openvpn_remote_port }}'
       - set interfaces openvpn vtun{{ customer_no | int }} tls ca-cert {{ management_certificate_authority_name }}
       - set interfaces openvpn vtun{{ customer_no | int }} tls certificate {{ management_certificate_name }}
       - set interfaces openvpn vtun{{ customer_no | int }} openvpn-option 'route-nopull'
