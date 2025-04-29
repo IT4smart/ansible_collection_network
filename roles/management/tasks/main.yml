@@ -68,13 +68,6 @@
     mode: "0600"
   delegate_to: localhost
 
-- name: management | Write OpenVPN certificate private key to file
-  ansible.builtin.copy:
-    content: "{{ management_openvpn_privatekey }}"
-    dest: /tmp/openvpn-private.key
-    mode: "0600"
-  delegate_to: localhost
-
 - name: management | Write OpenVPN certificate to file
   ansible.builtin.copy:
     content: "{{ item.content }}"
@@ -91,7 +84,6 @@
   loop:
     - { src: /tmp/openvpn-ca.crt, dest: /home/vyos/openvpn-ca.crt }
     - { src: /tmp/openvpn-cert.crt, dest: /home/vyos/openvpn-cert.crt }
-    - { src: /tmp/openvpn-private.key, dest: /home/vyos/openvpn-private.key }
 
 - name: management | Generate CA import command
   vyos.vyos.vyos_command:
@@ -104,12 +96,6 @@
     commands:
       - "import pki certificate {{ management_certificate_name }} file /home/vyos/openvpn-cert.crt"
   register: _result_ovpm_cert
-
-- name: management | Generate private key import command
-  vyos.vyos.vyos_command:
-    commands:
-      - "import pki certificate {{ management_certificate_name }} key-file /home/vyos/openvpn-private.key"
-  register: _result_ovpn_key
 
 - name: management | Import OpenVPN certificates
   vyos.vyos.vyos_command:
