@@ -103,7 +103,7 @@
       - config
       - "{{ (_result_ovpn_ca.stdout_lines | first)[1] }}"
       - "{{ (_result_ovpm_cert.stdout_lines | first)[1] }}"
-      - set pki certificate {{ management_certificate_name }} private key '{{ openvpn_privatekey | trim }}'
+      - set pki certificate {{ management_certificate_name }} private key '{{ management_openvpn_privatekey | trim }}'
       - commit
       - save
 
