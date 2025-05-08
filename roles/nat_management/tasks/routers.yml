@@ -1,6 +1,6 @@
 - name: routers | Set NAT rule id
   ansible.builtin.set_fact:
-    nat_rule_id: "{{ ((nat_management_nat_ip ~ customer_no | int) | hash('sha256') | int(base=16) % 1000000000 }}"
+    nat_rule_id: "{{ (nat_management_nat_ip ~ customer_no | int) | hash('sha256') | int(base=16) % 1000000000 }}"
 
 - name: routers | Debug
   ansible.builtin.debug:
