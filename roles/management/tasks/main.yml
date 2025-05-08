@@ -56,9 +56,8 @@
   vyos.vyos.vyos_command:
     commands:
       - config
-      - set protocols static route {{ nat_range }} next-hop {{ _vasirightip }} interface vtun{{ customer_no | int }}
       - set vrf name VRF{{ customer_no }} protocols static route {{ nat_range }} next-hop {{ _vasirightip }} interface veth{{ customer_no | int + 10000 }}
-      - command
+      - commit
       - save
 
 - name: management | Write OpenVPN CA to file
@@ -124,5 +123,13 @@
       - set interfaces openvpn vtun{{ customer_no | int }} authentication username {{ openvpn_username }}
       - set interfaces openvpn vtun{{ customer_no | int }} authentication password {{ openvpn_password }}
       - set interfaces openvpn vtun{{ customer_no | int }} vrf VRF{{ customer_no }}
+      - commit
+      - save
+
+- name: management | Create routes
+  vyos.vyos.vyos_command:
+    commands:
+      - config
+      - set protocols static route {{ nat_range }} next-hop {{ _vasirightip }} interface vtun{{ customer_no | int }}
       - commit
       - save
