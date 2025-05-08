@@ -10,7 +10,7 @@
   vyos.vyos.vyos_command:
     commands:
       - config
-      - set nat source rule {{ nat_rule_id | int }} description 'Masquerade traffic leaving veth40'
+      - set nat source rule {{ nat_rule_id | int }} description 'Masquerade traffic leaving veth{{ customer_no | int }}'
       - set nat source rule {{ nat_rule_id | int }} outbound-interface name veth{{ customer_no | int }}
       - set nat source rule {{ nat_rule_id | int }} translation address 'masquerade'
       - set nat source rule {{ nat_rule_id | int }} protocol all
