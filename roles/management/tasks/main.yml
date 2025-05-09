@@ -131,6 +131,6 @@
     commands:
       - config
       - set protocols static route {{ nat_range }} next-hop {{ _vasirightip }} interface vtun{{ customer_no | int }}
-      - set protocols static route {{ management_network }} next-hop {{ openvpn_ip }} interface vtun{{ customer_no | int }}
+      - set vrf name VRF{{ customer_no }} protocols static route {{ management_network }} next-hop {{ openvpn_ip }} interface vtun{{ customer_no | int }}
       - commit
       - save
