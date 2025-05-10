@@ -1,7 +1,7 @@
 - name: dns | Add static dns entry
   ansible.builtin.lineinfile:
-    path: /etc/hosts
-    line: "{{ nat_management_nat_ip }} {{ inventory_hostname }}"
+    path: "/etc/dnsmasq.d/{{ nat_management_domain }}"
+    line: "address=/{{ inventory_hostname }}/{{ nat_management_nat_ip }}"
     search_string: "{{ nat_management_nat_ip }}"
   become: true
   register: _result_dns
