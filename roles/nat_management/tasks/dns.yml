@@ -1,6 +1,14 @@
+- name: dns | Ensure domain conf file exists
+  ansible.builtin.file:
+    path: "/etc/dnsmasq.d/{{ nat_management_domain }}.conf"
+    state: touch
+  become: true
+  delegate_to: "{{ item }}"
+  loop: "{{ groups['core_dns'] }}"
+
 - name: dns | Add static dns entry
   ansible.builtin.lineinfile:
-    path: "/etc/dnsmasq.d/{{ nat_management_domain }}"
+    path: "/etc/dnsmasq.d/{{ nat_management_domain }}.conf"
     line: "address=/{{ inventory_hostname }}/{{ nat_management_nat_ip }}"
     search_string: "{{ nat_management_nat_ip }}"
   become: true
