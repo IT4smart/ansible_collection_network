@@ -10,11 +10,71 @@
   ansible.builtin.lineinfile:
     path: "/etc/dnsmasq.d/{{ nat_management_domain }}.conf"
     line: "address=/{{ inventory_hostname }}/{{ nat_management_nat_ip }}"
-    search_string: "{{ nat_management_nat_ip }}"
+    #search_string: "{{ nat_management_nat_ip }}"
   become: true
   register: _result_dns
   delegate_to: "{{ item }}"
   loop: "{{ groups['core_dns'] }}"
+
+- name: dns | Add static dns entries for domain (ldap)
+  ansible.builtin.lineinfile:
+    path: "/etc/dnsmasq.d/{{ nat_management_domain }}.conf"
+    line: "srv-host=_ldap._tcp.dc._msdcs.{{ nat_management_domain }}, {{ nat_management_dc_ip }}"
+  become: true
+  register: _result_dns
+  delegate_to: "{{ item }}"
+  loop: "{{ groups['core_dns'] }}"
+  when: nat_management_dc_ip is defined
+
+- name: dns | Add static dns entries for domain (kerberos)
+  ansible.builtin.lineinfile:
+    path: "/etc/dnsmasq.d/{{ nat_management_domain }}.conf"
+    line: "srv-host=_kerberos._tcp.dc._msdcs.{{ nat_management_domain }}, {{ nat_management_dc_ip }}"
+  become: true
+  register: _result_dns
+  delegate_to: "{{ item }}"
+  loop: "{{ groups['core_dns'] }}"
+  when: nat_management_dc_ip is defined
+
+- name: dns | Add static dns entries for domain (ldap)
+  ansible.builtin.lineinfile:
+    path: "/etc/dnsmasq.d/{{ nat_management_domain }}.conf"
+    line: "srv-host=_ldap._tcp.Default-First-Site-Name._sites.dc._msdcs.{{ nat_management_domain }}, {{ nat_management_dc_ip }}"
+  become: true
+  register: _result_dns
+  delegate_to: "{{ item }}"
+  loop: "{{ groups['core_dns'] }}"
+  when: nat_management_dc_ip is defined
+
+- name: dns | Add static dns entries for domain (ldap)
+  ansible.builtin.lineinfile:
+    path: "/etc/dnsmasq.d/{{ nat_management_domain }}.conf"
+    line: "srv-host=_ldap._tcp.ForestDnsZones.{{ nat_management_domain }}, {{ nat_management_dc_ip }}"
+  become: true
+  register: _result_dns
+  delegate_to: "{{ item }}"
+  loop: "{{ groups['core_dns'] }}"
+  when: nat_management_dc_ip is defined
+
+- name: dns | Add static dns entries for domain (ldap)
+  ansible.builtin.lineinfile:
+    path: "/etc/dnsmasq.d/{{ nat_management_domain }}.conf"
+    line: "srv-host=_ldap._tcp.{{ nat_management_domain }}, {{ nat_management_dc_ip }}"
+  become: true
+  register: _result_dns
+  delegate_to: "{{ item }}"
+  loop: "{{ groups['core_dns'] }}"
+  when: nat_management_dc_ip is defined
+
+- name: dns | Add static dns entries for domain (ldap)
+  ansible.builtin.lineinfile:
+    path: "/etc/dnsmasq.d/{{ nat_management_domain }}.conf"
+    line: "srv-host=_ldap._tcp.pdc._msdcs.{{ nat_management_domain }}, {{ nat_management_dc_ip }}"
+  become: true
+  register: _result_dns
+  delegate_to: "{{ item }}"
+  loop: "{{ groups['core_dns'] }}"
+  when: nat_management_dc_ip is defined
 
 - name: dns | Restart dnsmasq
   ansible.builtin.systemd:
