@@ -15,6 +15,15 @@
   delegate_to: "{{ item }}"
   loop: "{{ groups['core_dns'] }}"
 
+- name: dns | Add ptr record
+  ansible.builtin.lineinfile:
+    path: "/etc/dnsmasq.d/{{ nat_management_domain }}.conf"
+    line: "ptr-record={{ nat_management_nat_ip | ansible.utils.ipaddr('revdns') }},{{ inventory_hostname }}"
+  become: true
+  register: _result_dns_ptr
+  delegate_to: "{{ item }}"
+  loop: "{{ groups['core_dns'] }}"
+
 - name: dns | Add static dns entries for domain (ldap)
   ansible.builtin.lineinfile:
     path: "/etc/dnsmasq.d/{{ nat_management_domain }}.conf"
@@ -79,7 +88,7 @@
   ansible.builtin.systemd:
     name: dnsmasq
     state: restarted
-  when: _result_dns.changed or _result_dns_ldap.changed or _result_dns_kerberos.changed or _result_dns_ldap2.changed or _result_dns_ldap3.changed or _result_dns_ldap4.changed or _result_dns_ldap5.changed
+  when: _result_dns.changed or _result_dns_ldap.changed or _result_dns_kerberos.changed or _result_dns_ldap2.changed or _result_dns_ldap3.changed or _result_dns_ldap4.changed or _result_dns_ldap5.changed or _result_dns_ptr.changed
   become: true
   delegate_to: "{{ item }}"
   loop: "{{ groups['core_dns'] }}"
