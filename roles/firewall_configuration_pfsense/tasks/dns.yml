@@ -9,3 +9,6 @@
     regdhcp: "{{ pfsense_dns_resolver_regdhcp }}"
     regdhcpstatic: "{{ pfsense_dns_resolver_regdhcpstatic }}"
     forward_tls_upstream: "{{ pfsense_dns_resolver_forward_tls_upstream }}"
+    domainoverrides: "{{ firewall_configuration_pfsense_dns_domainoverrides }}"
+    hosts: "{{ firewall_configuration_pfsense_dns_hosts }}"
+    forwarding: "{{ firewall_configuration_pfsense_dns_forwarding }}"

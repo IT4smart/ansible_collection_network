@@ -1,7 +1,12 @@
 # code: language=ansible
+- name: Build one firewall rule dictionary
+  ansible.builtin.set_fact:
+    _firewall_rules: "{{ firewall_configuration_pfsense_firewall_rules | community.general.lists_mergeby(firewall_configuration_pfsense_custom_firewall_rules, \
+                      'name') }}"
+
 - name: Configure firewall rules
   ansible.builtin.include_tasks: firewall.yml
-  with_items: "{{ pfsense_firewall_rules }}"
+  with_items: "{{ _firewall_rules }}"
 
 - name: Manage user on  PfSense
   ansible.builtin.include_tasks: user.yml

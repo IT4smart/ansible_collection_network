@@ -14,7 +14,7 @@
     state: present
   with_items:
     - pfSense-pkg-Open-VM-Tools
-  when: 
+  when:
     - pfsense_virtualized
     - ansible_facts['chassis_vendor'] != "QEMU"
 
@@ -24,7 +24,7 @@
       ansible.builtin.package:
         name: qemu-guest-agent
         state: present
-    
+
     - name: Configure QEMU guest agent
       ansible.builtin.template:
         src: rc_conf_local.j2
@@ -49,10 +49,22 @@
     hostname: "{{ inventory_hostname_short }}"
     domain: "{{ domain_name }}"
 
+- name: Convert list of dns servers to string
+  ansible.builtin.set_fact:
+    _dns_addresses: "{{ firewall_setup_pfsense_dns_addresses | join(' ') }}"
+  when: firewall_setup_pfsense_dns_addresses | length > 0
+
+- name: Convert list of dns hostnames to string
+  ansible.builtin.set_fact:
+    _dns_hostnames: "{{ firewall_setup_pfsense_dns_hostnames | join(' ') }}"
+  when: firewall_setup_pfsense_dns_hostnames | length > 0
+
 - name: Setup dns upstream
   pfsensible.core.pfsense_setup:
     dnsallowoverride: false
-    dns_addresses: 1.1.1.1 1.0.0.1
+    dns_addresses: "{{ _dns_addresses }}"
+    dns_hostnames: "{{ _dns_hostnames }}"
+    dnslocalhost: "{{ firewall_setup_pfsense_dnslocalhost }}"
 
 - name: Setup timeservers
   pfsensible.core.pfsense_setup:

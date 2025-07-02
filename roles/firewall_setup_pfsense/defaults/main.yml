@@ -1,2 +1,9 @@
 pfsense_virtualized: true
 pfsense_interfaces: []
+firewall_setup_pfsense_dns_addresses:
+  - 1.1.1.1
+  - 1.0.0.1
+firewall_setup_pfsense_dns_hostnames:
+  - cloudflare-dns.com
+  - cloudflare-dns.com
+firewall_setup_pfsense_dnslocalhost: local

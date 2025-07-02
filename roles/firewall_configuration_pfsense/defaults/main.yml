@@ -1,5 +1,8 @@
 openvpn_users: []
-pfsense_firewall_rules: []
+
+# Firewall
+firewall_configuration_pfsense_firewall_rules: []
+firewall_configuration_pfsense_custom_firewall_rules: []
 
 # DNS resolver
 pfsense_dns_resolver_state: present
@@ -7,11 +10,14 @@ pfsense_dns_resolver_enablessl: false
 pfsense_dns_resolver_active_interfaces:
   - all
 pfsense_dns_resolver_outgoing_interfaces:
-  - wan
-pfsense_dns_resolver_dnssec: true
+  - all
+pfsense_dns_resolver_dnssec: false
 pfsense_dns_resolver_regdhcp: true
 pfsense_dns_resolver_regdhcpstatic: true
-pfsense_dns_resolver_forward_tls_upstream: false
+pfsense_dns_resolver_forward_tls_upstream: true
+firewall_configuration_pfsense_dns_domainoverrides: []
+firewall_configuration_pfsense_dns_hosts: []
+firewall_configuration_pfsense_dns_forwarding: true
 
 # DHCP static
 pfsense_dhcp_static_enabled: false
