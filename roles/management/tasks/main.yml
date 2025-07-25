@@ -126,6 +126,15 @@
       - commit
       - save
 
+- name: management | Configure customer OpenVPN options
+  vyos.vyos.vyos_command:
+    commands:
+      - config
+      - set interfaces openvpn vtun{{ customer_no | int }} openvpn-option '{{ item }}'
+      - commit
+      - save
+  loop: "{{ management_openvpn_options }}"
+
 - name: management | Create routes
   vyos.vyos.vyos_command:
     commands:
