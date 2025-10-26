@@ -142,4 +142,5 @@
       - set vrf name VRF{{ customer_no }} protocols static route {{ item }} next-hop {{ openvpn_ip }} interface vtun{{ customer_no | int }}
       - commit
       - save
+      - exit
   loop: "{{ management_networks }}"
