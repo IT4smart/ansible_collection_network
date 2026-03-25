@@ -78,11 +78,15 @@
 - name: Create user certificate
   pfsensible.core.pfsense_cert:
     method: internal
-    name: "it4smart"
-    ca: "OpenVPN CA"
-    certtype: user
-    keylen: 4096
-    dn_country: DE
+    name: "{{ user.name }}"
+    ca: "{{ user.ca }}"
+    certtype: "{{ user.certtype }}"
+    keylen: "{{ user.keylen }}"
+    dn_country: "{{ user.dn_country }}"
+  loop: "{{ firewall_setup_pfsense_users }}"
+  loop_control:
+    loop_var: user
+    label: "{{ user.name }}"
 
 - name: Network
   ansible.builtin.include_tasks: network.yml

@@ -7,3 +7,4 @@ firewall_setup_pfsense_dns_hostnames:
   - cloudflare-dns.com
   - cloudflare-dns.com
 firewall_setup_pfsense_dnslocalhost: local
+firewall_setup_pfsense_users: []
