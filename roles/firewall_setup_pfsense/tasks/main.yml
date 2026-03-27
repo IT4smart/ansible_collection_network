@@ -72,8 +72,13 @@
 
 - name: Create IT4smart vpn user
   pfsensible.core.pfsense_user:
-    name: it4smart
-    password: "{{ vault_it4smart_fwl_password | password_hash('bcrypt') }}"
+    name: "{{ user.name }}"
+    state: "{{ user.state | default('present') }}"
+    password: "{{ user.password | password_hash('bcrypt') }}"
+  loop: "{{ firewall_setup_pfsense_users }}"
+  loop_control:
+    loop_var: user
+    label: "{{ user.name }}"
 
 - name: Create user certificate
   pfsensible.core.pfsense_cert:
