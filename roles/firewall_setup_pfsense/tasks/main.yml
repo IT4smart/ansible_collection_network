@@ -20,7 +20,7 @@
     - pfsense_virtualized
     - ansible_facts['chassis_vendor'] != "QEMU"
 
-- name: Configure QEMU guest agent
+- name: Configure QEMU guest agent  # noqa: key-order[task]
   block:
     - name: Install QEMU guest agent package
       ansible.builtin.package:
@@ -48,6 +48,7 @@
   pfsensible.core.pfsense_setup:
     timezone: Europe/Berlin
     language: de_DE
+  become: true
 
 - name: Setup hostname and domain
   pfsensible.core.pfsense_setup:
