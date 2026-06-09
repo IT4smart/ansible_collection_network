@@ -54,6 +54,7 @@
   pfsensible.core.pfsense_setup:
     hostname: "{{ inventory_hostname_short }}"
     domain: "{{ domain_name }}"
+  become: true
 
 - name: Convert list of dns servers to string
   ansible.builtin.set_fact:
