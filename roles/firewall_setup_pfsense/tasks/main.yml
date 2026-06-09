@@ -71,6 +71,7 @@
     dns_addresses: "{{ _dns_addresses }}"
     dns_hostnames: "{{ _dns_hostnames }}"
     dnslocalhost: "{{ firewall_setup_pfsense_dnslocalhost }}"
+  become: true
 
 - name: Setup timeservers
   pfsensible.core.pfsense_setup:
