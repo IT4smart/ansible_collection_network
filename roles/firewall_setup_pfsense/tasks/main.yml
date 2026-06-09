@@ -46,7 +46,7 @@
 
 - name: Timezone and language
   pfsensible.core.pfsense_setup:
-    timezone: Europe/Berlin
+    timezone: "{{ firewall_setup_pfsense_timezone }}"
     language: de_DE
   become: true
 
@@ -73,9 +73,15 @@
     dnslocalhost: "{{ firewall_setup_pfsense_dnslocalhost }}"
   become: true
 
+- name: Convert list of timeservers to string
+  ansible.builtin.set_fact:
+    _timeservers: "{{ firewall_setup_pfsense_timeservers | join(' ') }}"
+  when: firewall_setup_pfsense_timeservers | length > 0
+
 - name: Setup timeservers
   pfsensible.core.pfsense_setup:
-    timeservers: 0.europe.pool.ntp.org 1.europe.pool.ntp.org 2.europe.pool.ntp.org 3.europe.pool.ntp.org
+    timeservers: "{{ _timeservers }}"
+  become: true
 
 - name: Create IT4smart vpn user
   pfsensible.core.pfsense_user:
