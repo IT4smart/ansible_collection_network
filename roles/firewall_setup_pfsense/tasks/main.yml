@@ -3,6 +3,7 @@
   ansible.builtin.package:
     name: "{{ item }}"
     state: present
+  become: true
   with_items:
     - pfSense-pkg-sudo
     - pfSense-pkg-openvpn-client-export
@@ -12,6 +13,7 @@
   ansible.builtin.package:
     name: "{{ item }}"
     state: present
+  become: true
   with_items:
     - pfSense-pkg-Open-VM-Tools
   when:
@@ -24,17 +26,20 @@
       ansible.builtin.package:
         name: qemu-guest-agent
         state: present
+      become: true
 
     - name: Configure QEMU guest agent
       ansible.builtin.template:
         src: rc_conf_local.j2
         dest: /etc/rc.conf.local
+      become: true
 
     - name: Enable QEMU guest agent
       ansible.builtin.service:
         name: qemu-guest-agent
         enabled: true
         state: started
+      become: true
   when:
     - pfsense_virtualized
     - ansible_facts['chassis_vendor'] == "QEMU"
