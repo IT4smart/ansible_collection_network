@@ -8,3 +8,4 @@
     ipv4_prefixlen: "{{ item.ipv4_prefix_length | default(omit) }}"
     ipv4_type: "{{ item.ipv4_type }}"
   with_items: "{{ pfsense_interfaces }}"
+  become: true
