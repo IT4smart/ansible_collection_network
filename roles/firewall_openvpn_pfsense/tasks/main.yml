@@ -106,6 +106,7 @@
 - name: Wait for config written
   ansible.builtin.wait_for:
     path: "/var/etc/openvpn/server{{ openvpn_server.vpnid }}/config.ovpn"
+  become: true
 
 - name: "Define {{ firewall_openvpn_pfsense_interface_name }}"
   pfsensible.core.pfsense_interface:
