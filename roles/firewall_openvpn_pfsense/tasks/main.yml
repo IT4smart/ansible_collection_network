@@ -1,35 +1,115 @@
 # code: language=ansible
 - name: OpenVPN CA
   pfsensible.core.pfsense_ca:
-    name: "{{ openvpn_server_args.ca }}"
-    certificate: "{{ vault_openvpn_ca }}"
-    randomserial: true
+    name: "{{ firewall_openvpn_pfsense_ca_name }}"
+    method: "{{ firewall_openvpn_pfsense_ca_method }}"
+    keytype: "{{ firewall_openvpn_pfsense_ca_keytype | default(omit) }}"
+    keylen: "{{ firewall_openvpn_pfsense_ca_keylen | default(omit) }}"
+    digest_alg: "{{ firewall_openvpn_pfsense_ca_digest_alg | default(omit) }}"
+    lifetime: "{{ firewall_openvpn_pfsense_ca_lifetime | default(omit) }}"
+    dn_commonname: "{{ firewall_openvpn_pfsense_ca_dn_commonname | default(omit) }}"
+    dn_country: "{{ firewall_openvpn_pfsense_ca_dn_country | default(omit) }}"
+    dn_city: "{{ firewall_openvpn_pfsense_ca_dn_city | default(omit) }}"
+    dn_organization: "{{ firewall_openvpn_pfsense_ca_dn_organization | default(omit) }}"
+    randomserial: "{{ firewall_openvpn_pfsense_ca_randomserial | default(omit) }}"
     state: present
+  become: true
 
 - name: Generate new internal certificate for OpenVPN
   pfsensible.core.pfsense_cert:
     method: internal
-    name: "{{ openvpn_server_args.cert }}"
-    ca: "{{ openvpn_server_args.ca }}"
-    keytype: RSA
-    keylen: 4096
-    lifetime: 370
-    dn_country: DE
-    certtype: server
+    name: "{{ firewall_openvpn_pfsense_cert_name }}"
+    ca: "{{ firewall_openvpn_pfsense_cert_ca_name }}"
+    keytype: "{{ firewall_openvpn_pfsense_cert_keytype | default(omit) }}"
+    keylen: "{{ firewall_openvpn_pfsense_cert_keylen | default(omit) }}"
+    lifetime: "{{ firewall_openvpn_pfsense_cert_lifetime | default(omit) }}"
+    dn_country: "{{ firewall_openvpn_pfsense_cert_dn_country | default(omit) }}"
+    dn_city: "{{ firewall_openvpn_pfsense_cert_dn_city | default(omit) }}"
+    dn_organization: "{{ firewall_openvpn_pfsense_cert_dn_organization | default(omit) }}"
+    certtype: "{{ firewall_openvpn_pfsense_cert_certtype | default(omit) }}"
     state: present
+  become: true
 
-- name: "Define {{ openvpn_server_args.name }}"
-  pfsensible.core.pfsense_openvpn_server: "{{ openvpn_server_args }}"
+- name: Convert list of local networks to string comma separated
+  ansible.builtin.set_fact:
+    _local_network: "{{ firewall_openvpn_pfsense_server_local_network | join(', ') }}"
+  when: firewall_openvpn_pfsense_server_local_network | length > 0
+
+- name: Convert list of local networks ipv6 to string comma separated
+  ansible.builtin.set_fact:
+    _local_networkv6: "{{ firewall_openvpn_pfsense_server_local_networkv6 | join(', ') }}"
+  when: firewall_openvpn_pfsense_server_local_networkv6 | length > 0
+
+- name: Convert list of remote networks to string comma separated
+  ansible.builtin.set_fact:
+    _remote_network: "{{ firewall_openvpn_pfsense_server_remote_network | join(', ') }}"
+  when: firewall_openvpn_pfsense_server_remote_network | length > 0
+
+- name: Convert list of remote networks ipv6 to string comma separated
+  ansible.builtin.set_fact:
+    _remote_networkv6: "{{ firewall_openvpn_pfsense_server_remote_networkv6 | join(', ') }}"
+  when: firewall_openvpn_pfsense_server_remote_networkv6 | length > 0
+
+- name: "Define {{ firewall_openvpn_pfsense_server_name}}"
+  pfsensible.core.pfsense_openvpn_server:
+    name: "{{ firewall_openvpn_pfsense_server_name }}"
+    mode: "{{ firewall_openvpn_pfsense_server_mode }}"
+    authmode: "{{ firewall_openvpn_pfsense_server_authmode | default(omit) }}"
+    state: present
+    disable: "{{ firewall_openvpn_pfsense_server_disable | default(omit) }}"
+    interface: "{{ firewall_openvpn_pfsense_server_interface | default(omit) }}"
+    local_port: "{{ firewall_openvpn_pfsense_server_local_port | default(omit) }}"
+    protocol: "{{ firewall_openvpn_pfsense_server_protocol | default(omit) }}"
+    dev_mode: "{{ firewall_openvpn_pfsense_server_dev_mode | default(omit) }}"
+    tls: "{{ firewall_openvpn_pfsense_server_tls | default(omit) }}"
+    tls_type: "{{ firewall_openvpn_pfsense_server_tls_type | default(omit) }}"
+    ca: "{{ firewall_openvpn_pfsense_server_ca_name }}"
+    cert: "{{ firewall_openvpn_pfsense_server_cert_name }}"
+    cert_depth: "{{ firewall_openvpn_pfsense_server_cert_depth | default(omit) }}"
+    strictusercn: "{{ firewall_openvpn_pfsense_server_strictusercn | default(omit) }}"
+    shared_key: "{{ firewall_openvpn_pfsense_server_shared_key | default(omit) }}"
+    dh_length: "{{ firewall_openvpn_pfsense_server_dh_length | default(omit) }}"
+    ecdh_curve: "{{ firewall_openvpn_pfsense_server_ecdh_curve | default(omit) }}"
+    data_ciphers_fallback: "{{ firewall_openvpn_pfsense_server_data_ciphers_fallback | default(omit) }}"
+    data_ciphers: "{{ firewall_openvpn_pfsense_server_data_ciphers | default(omit) }}"
+    ncp_enable: "{{ firewall_openvpn_pfsense_server_ncp_enable | default(omit) }}"
+    digest: "{{ firewall_openvpn_pfsense_server_digest | default(omit) }}"
+    tunnel_network: "{{ firewall_openvpn_pfsense_server_tunnel_network | default(omit) }}"
+    tunnel_networkv6: "{{ firewall_openvpn_pfsense_server_tunnel_networkv6 | default(omit) }}"
+    local_network: "{{ _local_network | default(omit) }}"
+    local_networkv6: "{{ _local_networkv6 | default(omit) }}"
+    remote_network: "{{ _remote_network | default(omit) }}"
+    remote_networkv6: "{{ _remote_networkv6 | default(omit) }}"
+    gwredir: "{{ firewall_openvpn_pfsense_server_gwredir | default(omit) }}"
+    gwredir6: "{{ firewall_openvpn_pfsense_server_gwredir6 | default(omit) }}"
+    maxclients: "{{ firewall_openvpn_pfsense_server_maxclients | default(omit) }}"
+    allow_compression: "{{ firewall_openvpn_pfsense_server_allow_compression | default(omit) }}"
+    compression: "{{ firewall_openvpn_pfsense_server_compression | default(omit) }}"
+    compression_push: "{{ firewall_openvpn_pfsense_server_compression_push | default(omit) }}"
+    passtos: "{{ firewall_openvpn_pfsense_server_passtos | default(omit) }}"
+    client2client: "{{ firewall_openvpn_pfsense_server_client2client | default(omit) }}"
+    dynamic_ip: "{{ firewall_openvpn_pfsense_server_dynamic_ip | default(omit) }}"
+    topology: "{{ firewall_openvpn_pfsense_server_topology | default(omit) }}"
+    dns_domain: "{{ firewall_openvpn_pfsense_server_dns_domain | default(omit) }}"
+    dns_server1: "{{ firewall_openvpn_pfsense_server_dns_server1 }}"
+    dns_server2: "{{ firewall_openvpn_pfsense_server_dns_server2 }}"
+    dns_server3: "{{ firewall_openvpn_pfsense_server_dns_server3 }}"
+    dns_server4: "{{ firewall_openvpn_pfsense_server_dns_server4 }}"
+    push_register_dns: "{{ firewall_openvpn_pfsense_server_push_register_dns }}"
+    create_gw: "{{ firewall_openvpn_pfsense_server_create_gw }}"
+    verbosity_level: "{{ firewall_openvpn_pfsense_server_verbosity_level }}"
+    custom_options: "{{ firewall_openvpn_pfsense_server_custom_options | default(omit) }}"
+    username_as_common_name: "{{ firewall_openvpn_pfsense_server_username_as_common_name }}"
+  become: true
   register: openvpn_server
-
-- name: Fail on different OpenVPN server vpnid
-  ansible.builtin.fail:
-    msg: OpenVPN server vpnid {{ openvpn_server.vpnid }} does not match expected value {{ openvpn_server_vpnid }}
-  when: openvpn_server.vpnid != openvpn_server_vpnid
 
 - name: Wait for config written
   ansible.builtin.wait_for:
     path: "/var/etc/openvpn/server{{ openvpn_server.vpnid }}/config.ovpn"
 
-- name: "Define {{ interface_args.name }}"
-  pfsensible.core.pfsense_interface: "{{ interface_args }}"
+- name: "Define {{ firewall_openvpn_pfsense_interface_name }}"
+  pfsensible.core.pfsense_interface:
+    descr: "{{ firewall_openvpn_pfsense_interface_description }}"
+    interface: "{{ firewall_openvpn_pfsense_interface_name }}"
+    enable: "{{ firewall_openvpn_pfsense_interface_enable  }}"
+  become: true

@@ -1,0 +1,68 @@
+# CA
+firewall_openvpn_pfsense_ca_name: OpenVPN CA
+firewall_openvpn_pfsense_ca_method: internal
+firewall_openvpn_pfsense_ca_keytype: RSA
+firewall_openvpn_pfsense_ca_keylen: 4096
+firewall_openvpn_pfsense_ca_digest_alg: sha256
+firewall_openvpn_pfsense_ca_lifetime: 3650
+firewall_openvpn_pfsense_ca_dn_commonname: openvpn-ca
+firewall_openvpn_pfsense_ca_randomserial: true
+
+# Certificate
+firewall_openvpn_pfsense_cert_name: OpenVPN Server
+firewall_openvpn_pfsense_cert_ca_name: "{{ firewall_openvpn_pfsense_ca_name }}"
+firewall_openvpn_pfsense_cert_keytype: RSA
+firewall_openvpn_pfsense_cert_keylen: 4096
+firewall_openvpn_pfsense_cert_lifetime: 370
+firewall_openvpn_pfsense_cert_certtype: server
+
+# OpenVPN server
+firewall_openvpn_pfsense_server_name: OpenVPN Server
+firewall_openvpn_pfsense_server_mode: server_tls_user
+firewall_openvpn_pfsense_server_disable: false
+firewall_openvpn_pfsense_server_interface: wan
+firewall_openvpn_pfsense_server_local_port: 1194
+firewall_openvpn_pfsense_server_protocol: UDP4
+firewall_openvpn_pfsense_server_dev_mode: tun
+firewall_openvpn_pfsense_server_tls_type: crypt
+firewall_openvpn_pfsense_server_ca_name: "{{ firewall_openvpn_pfsense_ca_name }}"
+firewall_openvpn_pfsense_server_cert_name: "{{ firewall_openvpn_pfsense_cert_name }}"
+firewall_openvpn_pfsense_server_cert_depth: 1
+firewall_openvpn_pfsense_server_strictusercn: false
+firewall_openvpn_pfsense_server_dh_length: 4096
+firewall_openvpn_pfsense_server_ecdh_curve: none
+firewall_openvpn_pfsense_server_data_ciphers_fallback: AES-256-CBC
+firewall_openvpn_pfsense_server_data_ciphers:
+  - AES-256-GCM
+  - AES-128-GCM
+  - AES-256-CBC
+firewall_openvpn_pfsense_server_ncp_enable: true
+firewall_openvpn_pfsense_server_digest: SHA256
+firewall_openvpn_pfsense_server_tunnel_network: 10.0.0.0/24
+firewall_openvpn_pfsense_server_local_network: []
+firewall_openvpn_pfsense_server_local_networkv6: []
+firewall_openvpn_pfsense_server_remote_network: []
+firewall_openvpn_pfsense_server_remote_networkv6: []
+firewall_openvpn_pfsense_server_gwredir: false
+firewall_openvpn_pfsense_server_gwredir6: false
+firewall_openvpn_pfsense_server_allow_compression: 'no'
+firewall_openvpn_pfsense_server_compression: ''
+firewall_openvpn_pfsense_server_compression_push: false
+firewall_openvpn_pfsense_server_passtos: false
+firewall_openvpn_pfsense_server_client2client: false
+firewall_openvpn_pfsense_server_dynamic_ip: false
+firewall_openvpn_pfsense_server_topology: subnet
+firewall_openvpn_pfsense_server_dns_domain: ''
+firewall_openvpn_pfsense_server_dns_server1: ''
+firewall_openvpn_pfsense_server_dns_server2: ''
+firewall_openvpn_pfsense_server_dns_server3: ''
+firewall_openvpn_pfsense_server_dns_server4: ''
+firewall_openvpn_pfsense_server_push_register_dns: false
+firewall_openvpn_pfsense_server_create_gw: both
+firewall_openvpn_pfsense_server_verbosity_level: 1
+firewall_openvpn_pfsense_server_username_as_common_name: false
+
+# Interface
+firewall_openvpn_pfsense_interface_description: VPN1
+firewall_openvpn_pfsense_interface_name: ovpns1
+firewall_openvpn_pfsense_interface_enable: true

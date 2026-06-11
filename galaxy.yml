@@ -1,6 +1,6 @@
 namespace: "it4smart"
 name: "network"
-version: "0.2.0"
+version: "0.3.0"
 readme: README.md
 authors:
   - hack3d (github.com/hack3d)
@@ -20,4 +20,4 @@ build_ignore:
   - ".github"
 dependencies:
   cisco.ios: ">=3.3.1"
-  pfsensible.core: ">=0.6.1"
+  pfsensible.core: "0.7.1"
