@@ -3,13 +3,15 @@
   pfsensible.core.pfsense_user:
     name: "{{ item.username }}"
     password: "{{ item.password | password_hash('bcrypt') }}"
+  become: true
 
 - name: user | Create user certificate
   pfsensible.core.pfsense_cert:
     method: internal
     name: "{{ item.username }}"
-    ca: "OpenVPN CA"
+    ca: "{{ item.ca }}"
     certtype: user
-    keylen: 4096
-    dn_country: DE
-    lifetime: 398
+    keylen: "{{ item.keylen }}"
+    dn_country: "{{ item.dn_country }}"
+    lifetime: "{{ item.lifetime }}"
+  become: true
