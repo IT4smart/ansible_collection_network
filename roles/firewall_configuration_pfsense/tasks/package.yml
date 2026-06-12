@@ -1,0 +1,9 @@
+# code: language=ansible
+- name: package | Install packages
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  become: true
+  loop: "{{ firewall_configuration_pfsense_packages }}"
+  loop_control:
+    label: "{{ item }}"

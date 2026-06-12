@@ -21,3 +21,6 @@
 
 - name: Manage dnat
   ansible.builtin.include_tasks: nat.yml
+
+- name: Install additional packages
+  ansible.builtin.include_tasks: package.yml

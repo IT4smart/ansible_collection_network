@@ -112,5 +112,5 @@
   pfsensible.core.pfsense_interface:
     descr: "{{ firewall_openvpn_pfsense_interface_description }}"
     interface: "{{ firewall_openvpn_pfsense_interface_name }}"
-    enable: "{{ firewall_openvpn_pfsense_interface_enable  }}"
+    enable: "{{ firewall_openvpn_pfsense_interface_enable }}"
   become: true

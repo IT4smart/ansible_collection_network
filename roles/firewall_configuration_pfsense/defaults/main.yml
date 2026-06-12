@@ -1,4 +1,5 @@
-openvpn_users: []
+openvpn_users: [] # noqa: var-naming[no-role-prefix]
+firewall_configuration_pfsense_openvpn_users: "{{ openvpn_users }}"
 
 # Firewall
 firewall_configuration_pfsense_firewall_rules: []
@@ -26,3 +27,4 @@ pfsense_dhcp_static_entries: []
 # DNAT
 pfsense_nat_port_forwards: []
 firewall_configuration_pfsense_nat_outbound: []
+firewall_configuration_pfsense_packages: []
