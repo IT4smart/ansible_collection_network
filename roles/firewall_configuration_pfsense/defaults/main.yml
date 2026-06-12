@@ -25,3 +25,4 @@ pfsense_dhcp_static_entries: []
 
 # DNAT
 pfsense_nat_port_forwards: []
+firewall_configuration_pfsense_nat_outbound: []

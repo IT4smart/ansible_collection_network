@@ -13,4 +13,27 @@
     state: "{{ item.state | default('present') }}"
     before: "{{ item.before | default(omit) }}"
     after: "{{ item.after | default(omit) }}"
+  become: true
   with_items: "{{ pfsense_nat_port_forwards }}"
+
+- name: nat | Manage outbound NAT
+  pfsensible.core.pfsense_nat_outbound:
+    descr: "{{ item.description }}"
+    disabled: "{{ item.disabled | default(false) }}"
+    nonat: "{{ item.nonat | default(false) }}"
+    interface: "{{ item.interface }}"
+    ipprotocol: "{{ item.ip_protocol }}"
+    protocol: "{{ item.protocol }}"
+    source: "{{ item.source }}"
+    destination: "{{ item.destination }}"
+    invert: "{{ item.invert | default(false) }}"
+    address: "{{ item.address }}"
+    poolopts: "{{ item.poolopts | default(omit) }}"
+    source_hash_key: "{{ item.source_hash_key | default(omit) }}"
+    staticnatport: "{{ item.staticnatport | default(false) }}"
+    nosync: "{{ item.nosync | default(false) }}"
+    state: "{{ item.state | default('present') }}"
+    after: "{{ item.after | default(omit) }}"
+    before: "{{ item.before | default(omit) }}"
+  become: true
+  loop: "{{ firewall_configuration_pfsense_nat_outbound }}"
