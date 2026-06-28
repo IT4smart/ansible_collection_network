@@ -1,0 +1,59 @@
+dependency:
+  name: galaxy
+
+driver:
+  name: docker
+
+platforms:
+  - name: vyos
+    image: ghcr.io/evilhamsterman/vyos:rolling
+    privileged: true
+    volumes:
+      - /lib/modules:/lib/modules:ro
+    tmpfs:
+      - /tmp
+      - /run
+    command: /sbin/init
+    pre_build_image: true
+    network_mode: bridge
+    published_ports:
+      - "127.0.0.1:2222:22"
+    groups:
+      - vyos_routers
+
+provisioner:
+  name: ansible
+  connection_options:
+    ansible_connection: network_cli
+    ansible_network_os: vyos.vyos.vyos
+    ansible_user: vyos
+    ansible_password: vyos
+    ansible_port: 2222
+    ansible_host: "127.0.0.1"
+    ansible_ssh_common_args: >-
+      -o StrictHostKeyChecking=no
+      -o UserKnownHostsFile=/dev/null
+  inventory:
+    hosts:
+      vyos:
+        ansible_host: "127.0.0.1"
+        ansible_port: 2222
+        ansible_user: vyos
+        ansible_password: vyos
+        ansible_connection: network_cli
+        ansible_network_os: vyos.vyos.vyos
+        ansible_ssh_common_args: >-
+          -o StrictHostKeyChecking=no
+          -o UserKnownHostsFile=/dev/null
+
+scenario:
+  test_sequence:
+    - destroy
+    - prepare
+    - converge
+    - idempotence
+    - verify
+    - destroy
+
+verifier:
+  name: ansible

@@ -1,8 +1,11 @@
-version: "3"
 services:
   vscode:
     build: .
     volumes:
       - ../:/workspace
       - ~/.ssh:/mnt/ssh
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /lib/modules:/lib/modules:ro      # ← NEU: für VyOS im Container
+    privileged: true
+    network_mode: host
     entrypoint: [ "bash", "-c", "while sleep 1000; do :; done" ]

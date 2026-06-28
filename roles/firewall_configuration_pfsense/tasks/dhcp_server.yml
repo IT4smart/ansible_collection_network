@@ -1,0 +1,9 @@
+- name: Configure DHCP server
+  pfsensible.core.pfsense_dhcp_server:
+    interface: "{{ item.interface }}"
+    enable: "{{ item.dhcp_enable }}"
+    range_from: "{{ item.dhcp_range_from }}"
+    range_to: "{{ item.dhcp_range_to }}"
+    defaultleasetime: "{{ item.dhcp_defaultleasetime }}"
+    maxleasetime: "{{ item.dhcp_maxleasetime }}"
+  when: "{{ item.dhcp_enable }}"

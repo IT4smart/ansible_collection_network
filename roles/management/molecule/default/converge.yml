@@ -1,0 +1,11 @@
+- name: Converge
+  hosts: vyos
+  gather_facts: false
+
+  vars:
+    management_openvpn_ca: "{{ lookup('file', 'files/pki/ca.crt') }}"
+    management_openvpn_cert: "{{ lookup('file', 'files/pki/server.crt') }}"
+    management_openvpn_key: "{{ lookup('file', 'files/pki/server.key') }}"
+
+  roles:
+    - role: management

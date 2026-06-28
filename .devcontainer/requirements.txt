@@ -1,3 +1,4 @@
 ansible==6.4.0
 ansible-lint
-molecule-plugins[vagrant]
+molecule
+molecule-plugins[docker]

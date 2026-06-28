@@ -1,0 +1,25 @@
+- name: Verify
+  hosts: vyos
+  gather_facts: false
+
+  tasks:
+    - name: Check OpenVPN config
+      vyos.vyos.vyos_command:
+        commands:
+          - show configuration commands | match openvpn
+      register: result
+
+    - name: Assert OpenVPN exists
+      ansible.builtin.assert:
+        that:
+          - result.stdout[0] | length > 0
+
+    - name: Check cert installed
+      vyos.vyos.vyos_command:
+        commands:
+          - run ls /config/auth
+      register: files
+
+    - assert:
+        that:
+          - "'server.crt' in files.stdout[0]"

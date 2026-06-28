@@ -1,0 +1,78 @@
+- name: Prepare Molecule
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Wait for VyOS SSH port to become available
+      ansible.builtin.wait_for:
+        host: "127.0.0.1"
+        port: 2222
+        delay: 10
+        timeout: 120
+        state: started
+ 
+    - name: Pause for VyOS init to complete
+      ansible.builtin.pause:
+        seconds: 15
+
+- name: Prepare - Apply VyOS baseline configuration via SSH
+  hosts: vyos
+  gather_facts: false
+  tasks:
+    - name: Verify VyOS is responding to Ansible
+      vyos.vyos.vyos_command:
+        commands:
+          - show version
+      register: vyos_version
+      retries: 10
+      delay: 8
+      until: vyos_version is not failed
+
+    - name: Ensure SSH service is configured
+      vyos.vyos.vyos_config:
+        lines:
+          - set service ssh port '22'
+        save: true
+
+    - name: Commit baseline config
+      vyos.vyos.vyos_config:
+        lines:
+          - set system host-name 'vyos-molecule'
+        save: true
+
+- name: Prepare CA / Certificate
+  hosts: localhost
+  gather_facts: false
+  vars:
+    pki_dir: files/pki
+  tasks:
+    - name: Create PKI dir
+      ansible.builtin.file:
+        path: "{{ pki_dir }}"
+        state: directory
+
+    - name: Generate CA key
+      community.crypto.openssl_privatekey:
+        path: "{{ pki_dir }}/ca.key"
+
+    - name: Generate CA cert
+      community.crypto.x509_certificate:
+        path: "{{ pki_dir }}/ca.crt"
+        privatekey_path: "{{ pki_dir }}/ca.key"
+        provider: selfsigned
+
+    - name: Generate server key
+      community.crypto.openssl_privatekey:
+        path: "{{ pki_dir }}/server.key"
+
+    - name: Generate CSR
+      community.crypto.openssl_csr:
+        path: "{{ pki_dir }}/server.csr"
+        privatekey_path: "{{ pki_dir }}/server.key"
+
+    - name: Sign cert
+      community.crypto.x509_certificate:
+        path: "{{ pki_dir }}/server.crt"
+        csr_path: "{{ pki_dir }}/server.csr"
+        ownca_path: "{{ pki_dir }}/ca.crt"
+        ownca_privatekey_path: "{{ pki_dir }}/ca.key"
+        provider: ownca
