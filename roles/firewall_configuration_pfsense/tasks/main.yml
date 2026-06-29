@@ -28,3 +28,6 @@
 
 - name: Install additional packages
   ansible.builtin.include_tasks: package.yml
+
+- name: Configure OpenVPN client
+  ansible.builtin.include_tasks: openvpn_client.yml

@@ -28,3 +28,6 @@ pfsense_dhcp_static_entries: []
 pfsense_nat_port_forwards: []
 firewall_configuration_pfsense_nat_outbound: []
 firewall_configuration_pfsense_packages: []
+
+# OpenVPN client
+firewall_configuration_pfsense_openvpn_client: []
