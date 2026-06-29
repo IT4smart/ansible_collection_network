@@ -6,6 +6,7 @@
     range_to: "{{ item.dhcp_range_to }}"
     defaultleasetime: "{{ item.dhcp_defaultleasetime }}"
     maxleasetime: "{{ item.dhcp_maxleasetime }}"
+  become: true
   when:
     - item.dhcp_enable is defined 
     - item.dhcp_enable
