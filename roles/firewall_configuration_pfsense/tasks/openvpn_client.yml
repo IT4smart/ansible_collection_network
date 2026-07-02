@@ -1,16 +1,16 @@
-- name: Configure OpenVPN client
+- name: openvpn_client | Configure OpenVPN client
   pfsensible.core.pfsense_openvpn_client:
     name: "{{ item.name }}"
     mode: "{{ item.mode }}"
     authmode: "{{ item.authmode | default(omit) }}"
     disable: "{{ item.disable }}"
-    interface: "{{ item.interface | default(wan) }}"
+    interface: "{{ item.interface | default('wan') }}"
     server_addr: "{{ item.server_address }}"
     server_port: "{{ item.server_port }}"
     protocol: "{{ item.protocol }}"
     dev_mode: "{{ item.dev_mode }}"
     tls: "{{ item.tls | default(omit) }}"
-    tls_type: "{{ item.tls_type | default(auth) }}"
+    tls_type: "{{ item.tls_type | default('auth') }}"
     ca: "{{ item.ca }}"
     crl: "{{ item.crl | default(omit) }}"
     cert: "{{ item.cert }}"
@@ -20,7 +20,7 @@
     dh_length: "{{ item.dh_length | default(4096) }}"
     ecdh_curve: "{{ item.ecdh_curve }}"
     data_ciphers_fallback: "{{ item.data_ciphers_fallback }}"
-    data_ciphers: "{{ itemm.data_ciphers }}"
+    data_ciphers: "{{ item.data_ciphers }}"
     ncp_enable: "{{ item.ncp_enable | default(false) }}"
     digest: "{{ item.digest }}"
     tunnel_network: "{{ item.tunnel_network }}"
