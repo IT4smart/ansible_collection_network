@@ -7,6 +7,15 @@
   loop: "{{ firewall_configuration_pfsense_openvpn_client }}"
   when: item.ca is defined
 
+- name: openvpn_client | Import OpenVPN certificate
+  pfsensible.core.pfsense_cert:
+    name: "{{ item.cert_name }}"
+    method: existing
+    certificate: "{{ item.cert }}"
+  become: true
+  loop: "{{ firewall_configuration_pfsense_openvpn_client }}"
+  when: item.cert is defined
+
 - name: openvpn_client | Configure OpenVPN client
   pfsensible.core.pfsense_openvpn_client:
     name: "{{ item.name }}"
@@ -22,7 +31,7 @@
     tls_type: "{{ item.tls_type | default('auth') }}"
     ca: "{{ item.ca_name | default(omit) }}"
     crl: "{{ item.crl | default(omit) }}"
-    cert: "{{ item.cert | default(omit) }}"
+    cert: "{{ item.cert_name | default(omit) }}"
     cert_depth: "{{ item.cert_depth | default(1) }}"
     strictusercn: "{{ item.strictusercn | default(true) }}"
     shared_key: "{{ item.shared_key | default(omit) }}"
