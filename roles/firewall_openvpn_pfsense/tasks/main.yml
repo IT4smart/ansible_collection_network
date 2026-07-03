@@ -50,7 +50,7 @@
     _remote_networkv6: "{{ firewall_openvpn_pfsense_server_remote_networkv6 | join(', ') }}"
   when: firewall_openvpn_pfsense_server_remote_networkv6 | length > 0
 
-- name: "Define {{ firewall_openvpn_pfsense_server_name}}"
+- name: "Define {{ firewall_openvpn_pfsense_server_name }}"
   pfsensible.core.pfsense_openvpn_server:
     name: "{{ firewall_openvpn_pfsense_server_name }}"
     mode: "{{ firewall_openvpn_pfsense_server_mode }}"
@@ -100,6 +100,7 @@
     verbosity_level: "{{ firewall_openvpn_pfsense_server_verbosity_level }}"
     custom_options: "{{ firewall_openvpn_pfsense_server_custom_options | default(omit) }}"
     username_as_common_name: "{{ firewall_openvpn_pfsense_server_username_as_common_name }}"
+    remote_cert_tls: "{{ firewall_openvpn_pfsense_server_remote_cert_tls | default(omit) }}"
   become: true
   register: openvpn_server
 
