@@ -10,8 +10,11 @@
 - name: openvpn_client | Import OpenVPN certificate
   pfsensible.core.pfsense_cert:
     name: "{{ item.cert_name }}"
-    method: existing
+    method: import
+    ca: "{{ item.ca_name }}"
     certificate: "{{ item.cert }}"
+    key: "{{ item.cert_key }}"
+    certtype: user
   become: true
   loop: "{{ firewall_configuration_pfsense_openvpn_client }}"
   when: item.cert is defined
