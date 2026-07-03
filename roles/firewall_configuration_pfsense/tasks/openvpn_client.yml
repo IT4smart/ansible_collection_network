@@ -1,3 +1,11 @@
+- name: openvpn_client | Import OpenVPN CA
+  pfsensible.core.pfsense_ca:
+    name: "{{ item.ca_name }}"
+    method: existing
+    certificate: "{{ item.ca }}"
+  loop: "{{ firewall_configuration_pfsense_openvpn_client }}"
+  when: item.ca is defined
+
 - name: openvpn_client | Configure OpenVPN client
   pfsensible.core.pfsense_openvpn_client:
     name: "{{ item.name }}"
@@ -11,7 +19,7 @@
     dev_mode: "{{ item.dev_mode }}"
     tls: "{{ item.tls | default(omit) }}"
     tls_type: "{{ item.tls_type | default('auth') }}"
-    ca: "{{ item.ca | default(omit)}}"
+    ca: "{{ item.ca | default(omit) }}"
     crl: "{{ item.crl | default(omit) }}"
     cert: "{{ item.cert | default(omit) }}"
     cert_depth: "{{ item.cert_depth | default(1) }}"
@@ -35,7 +43,7 @@
     passtos: "{{ item.passtos | default(omit) }}"
     client2client: "{{ item.client2client | default(omit) }}"
     dynamic_ip: "{{ item.dynamic_ip | default(omit) }}"
-    topology: "{{ item.topology | default(omit)}}"
+    topology: "{{ item.topology | default(omit) }}"
     dns_domain: "{{ item.dns_domain }}"
     dns_client1: "{{ item.dns_client1 }}"
     dns_client2: "{{ item.dns_client2 | default(omit) }}"
