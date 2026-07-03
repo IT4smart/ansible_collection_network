@@ -4,7 +4,6 @@
     method: existing
     certificate: "{{ item.ca }}"
   become: true
-  loop: "{{ firewall_configuration_pfsense_openvpn_client }}"
   when: item.ca is defined
 
 - name: openvpn_client | Import OpenVPN certificate
@@ -16,8 +15,13 @@
     key: "{{ item.cert_key }}"
     certtype: user
   become: true
-  loop: "{{ firewall_configuration_pfsense_openvpn_client }}"
   when: item.cert is defined
+
+- name: Convert list of remote networks to string comma separated
+  ansible.builtin.set_fact:
+    _remote_network: "{{ item.remote_network | join(', ') }}"
+  when: item.remote_network | length > 0
+
 
 - name: openvpn_client | Configure OpenVPN client
   pfsensible.core.pfsense_openvpn_client:
@@ -46,7 +50,7 @@
     digest: "{{ item.digest }}"
     tunnel_network: "{{ item.tunnel_network | default(omit) }}"
     tunnel_networkv6: "{{ item.tunnel_networkv6 | default(omit) }}"
-    remote_network: "{{ item.remote_network }}"
+    remote_network: "{{ _remote_network }}"
     remote_networkv6: "{{ item.remote_networkv6 | default(omit) }}"
     gwredir: "{{ item.gwredir | default(false) }}"
     gwredir6: "{{ item.gwredir6 | default(false) }}"
