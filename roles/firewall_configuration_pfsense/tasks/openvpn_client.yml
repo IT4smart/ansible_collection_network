@@ -54,4 +54,5 @@
     create_gw: "{{ item.create_gw }}"
     verbosity_level: "{{ item.verbosity_level | default(omit) }}"
     custom_options: "{{ item.custom_options | default(omit) }}"
+  become: true
   loop: "{{ firewall_configuration_pfsense_openvpn_client }}"
