@@ -7,5 +7,7 @@
     ipv4_address: "{{ item.ipv4_address | default(omit) }}"
     ipv4_prefixlen: "{{ item.ipv4_prefix_length | default(omit) }}"
     ipv4_type: "{{ item.ipv4_type }}"
+    blockpriv: "{{ item.blockpriv | default(false) }}"
+    blockbogons: "{{ item.blockbogons | default(false) }}"
   with_items: "{{ pfsense_interfaces }}"
   become: true
