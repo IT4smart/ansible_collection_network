@@ -3,6 +3,7 @@
     name: "{{ item.ca_name }}"
     method: existing
     certificate: "{{ item.ca }}"
+  become: true
   loop: "{{ firewall_configuration_pfsense_openvpn_client }}"
   when: item.ca is defined
 
@@ -19,7 +20,7 @@
     dev_mode: "{{ item.dev_mode }}"
     tls: "{{ item.tls | default(omit) }}"
     tls_type: "{{ item.tls_type | default('auth') }}"
-    ca: "{{ item.ca | default(omit) }}"
+    ca: "{{ item.ca_name | default(omit) }}"
     crl: "{{ item.crl | default(omit) }}"
     cert: "{{ item.cert | default(omit) }}"
     cert_depth: "{{ item.cert_depth | default(1) }}"
