@@ -66,3 +66,5 @@ firewall_openvpn_pfsense_server_username_as_common_name: false
 firewall_openvpn_pfsense_interface_description: VPN1
 firewall_openvpn_pfsense_interface_name: ovpns1
 firewall_openvpn_pfsense_interface_enable: true
+
+firewall_openvpn_pfsense_override: []
