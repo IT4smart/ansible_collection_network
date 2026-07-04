@@ -126,6 +126,7 @@
     remote_network: "{{ _remote_network | default(omit) }}"
     remote_networkv6: "{{ _remote_networkv6 | default(omit) }}"
   become: true
+  loop: "{{ firewall_openvpn_pfsense_override }}"
   when:
     - firewall_openvpn_pfsense_override | length > 0
     - firewall_openvpn_pfsense_server_mode == "p2p_tls"
