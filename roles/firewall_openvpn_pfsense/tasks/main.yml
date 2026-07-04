@@ -115,3 +115,14 @@
     interface: "{{ firewall_openvpn_pfsense_interface_name }}"
     enable: "{{ firewall_openvpn_pfsense_interface_enable }}"
   become: true
+
+- name: Configure OpenVPN client override
+  pfsensible.core.pfsense_openvpn_override:
+    name: "{{ firewall_openvpn_pfsense_override_name }}"
+    server_list: "{{ firewall_openvpn_pfsense_server_name }}"
+    descr: "{{ firewall_openvpn_pfsense_override_description }}"
+    local_network: "{{ _local_network | default(omit) }}"
+    local_networkv6: "{{ _local_networkv6 | default(omit) }}"
+    remote_network: "{{ _remote_network | default(omit) }}"
+    remote_networkv6: "{{ _remote_networkv6 | default(omit) }}"
+  when: firewall_openvpn_pfsense_server_mode == "p2p_tls"
