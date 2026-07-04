@@ -1,0 +1,16 @@
+- name: override | Debug remote network
+  ansible.builtin.debug:
+    msg: "Remote network: {{ _remote_network }}"
+  when: firewall_openvpn_pfsense_server_mode == "p2p_tls"
+
+- name: override | Configure OpenVPN client override
+  pfsensible.core.pfsense_openvpn_override:
+    name: "{{ item.name }}"
+    server_list: "{{ item.server_list }}"
+    descr: "{{ item.description | default(omit) }}"
+    local_network: "{{ _local_network | default(omit) }}"
+    local_networkv6: "{{ _local_networkv6 | default(omit) }}"
+    remote_network: "{{ _remote_network | default(omit) }}"
+    remote_networkv6: "{{ _remote_networkv6 | default(omit) }}"
+  become: true
+  when: firewall_openvpn_pfsense_server_mode == "p2p_tls"
