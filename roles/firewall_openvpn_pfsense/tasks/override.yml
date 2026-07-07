@@ -3,7 +3,7 @@
     msg: "OpenVPN Server Remote network: {{ _remote_network }}"
   when: firewall_openvpn_pfsense_server_mode == "p2p_tls"
 
-- name: override |Convert list of remote networks to string comma separated
+- name: override | Convert list of remote networks to string comma separated
   ansible.builtin.set_fact:
     _remote_network_override: "{{ item.remote_network | join(', ') }}"
   when:
