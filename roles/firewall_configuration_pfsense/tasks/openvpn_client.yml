@@ -22,7 +22,6 @@
     _remote_network: "{{ item.remote_network | join(', ') }}"
   when: item.remote_network | length > 0
 
-
 - name: openvpn_client | Configure OpenVPN client
   pfsensible.core.pfsense_openvpn_client:
     name: "{{ item.name }}"
@@ -71,4 +70,3 @@
     verbosity_level: "{{ item.verbosity_level | default(omit) }}"
     custom_options: "{{ item.custom_options | default(omit) }}"
   become: true
-  loop: "{{ firewall_configuration_pfsense_openvpn_client }}"

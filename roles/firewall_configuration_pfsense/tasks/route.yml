@@ -1,0 +1,7 @@
+- name: route | Manage static route
+  pfsensible.core.pfsense_route:
+    descr: "{{ item.description | default(omit) }}"
+    network: "{{ item.network }}"
+    gateway: "{{ item.gateway }}"
+    disabled: "{{ item.disabled | default(false) }}"
+    state: "{{ item.state | default('present') }}"
