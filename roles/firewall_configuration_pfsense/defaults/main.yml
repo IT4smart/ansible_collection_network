@@ -34,3 +34,5 @@ firewall_configuration_pfsense_openvpn_client: []
 
 # Static routes
 firewall_configuration_pfsense_static_routes: []
+
+firewall_configuration_pfsense_authentication_server: []

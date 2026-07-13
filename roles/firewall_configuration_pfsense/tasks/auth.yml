@@ -11,6 +11,7 @@
     basedn: "{{ item.basedn | default(omit) }}"
     authcn: "{{ item.authcn | default(omit) }}"
     extended_enabled: "{{ item.extended_enabled | default(omit) }}"
+    extended_query: "{{ item.extended_query | default(omit) }}"
     binddn: "{{ item.binddn | default(omit) }}"
     bindpw: "{{ item.bind_password | default(omit) }}"
     attr_user: "{{ item.attr_user | default(omit) }}"

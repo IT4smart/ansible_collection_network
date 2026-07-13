@@ -33,15 +33,12 @@
   ansible.builtin.include_tasks: openvpn_client.yml
   loop: "{{ firewall_configuration_pfsense_openvpn_client }}"
 
-- name: Configure OpenVPN client override
-  ansible.builtin.include_tasks:
-    file: openvpn_client_override.yml
-  loop: "{{ firewall_configuration_pfsense_openvpn_client_override }}"
-
 - name: Configure static routes
-  ansible.builtin.include_tasks: route.yml
+  ansible.builtin.include_tasks:
+    file: route.yml
   loop: "{{ firewall_configuration_pfsense_static_routes }}"
 
 - name: Configure authentification server
-  ansible.builtin.include_tasks: auth.yml
+  ansible.builtin.include_tasks:
+    file: auth.yml
   loop: "{{ firewall_configuration_pfsense_authentication_server }}"
