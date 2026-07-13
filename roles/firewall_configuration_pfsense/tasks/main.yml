@@ -41,3 +41,7 @@
 - name: Configure static routes
   ansible.builtin.include_tasks: route.yml
   loop: "{{ firewall_configuration_pfsense_static_routes }}"
+
+- name: Configure authentification server
+  ansible.builtin.include_tasks: auth.yml
+  loop: "{{ firewall_configuration_pfsense_authentication_server }}"
