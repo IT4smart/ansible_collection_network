@@ -24,4 +24,5 @@
     ldap_nostrip_at: "{{ item.ldap_nostrip_at | default(omit) }}"
     ldap_pam_groupdn: "{{ item.ldap_pam_groupdn | default(omit) }}"
     ldap_allow_unauthenticated: "{{ item.ldap_allow_unauthenticated | default(omit) }}"
+  become: true
   when: item.type == 'ldap'
